@@ -22,7 +22,11 @@ import TimelineColorsExample from './charts/TimelineColorsExample'
 import TimelineMultiExample from './charts/TimelineMultiExample'
 import TimelineAdvancedExample from './charts/TimelineAdvancedExample'
 import TimelineMultiSeriesExample from './charts/TimelineMultiSeriesExample'
-import VueApexCharts from '../../dist/vue-apexcharts';
+import TimelineContractorsExample from './charts/TimelineContractors'
+import TTDate from './charts/TTDate'
+import VueApexCharts from '../../dist/vue-apexcharts'
+
+import GoogleCharts from './charts/google-charts/Policy'
 // 
 const app = createApp(App);
 
@@ -50,7 +54,10 @@ const routes = [
   { path: '/timelinecolors', component: TimelineColorsExample },
   { path: '/timelinemulti', component: TimelineMultiExample },
   { path: '/timelineadvanced', component: TimelineAdvancedExample },
-  { path: '/timelinemultiseries', component: TimelineMultiSeriesExample }
+  { path: '/timelinemultiseries', component: TimelineMultiSeriesExample },
+  { path: '/timelinecontractors', component: TimelineContractorsExample },
+  { path: '/ttdate', component: TTDate },
+  { path: '/googlecharts', component: GoogleCharts },
 ]
 
 // const router = new VueRouter({
