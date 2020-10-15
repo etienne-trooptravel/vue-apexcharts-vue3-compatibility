@@ -369,31 +369,8 @@ $shadow: rgba(0, 0, 0, 0.2);
   border-top: 0.0625rem solid $border;
 }
 
-// @media (max-width: 40rem) {
-//   #container {
-//     width: 10rem;
-//     height: 12rem;
-//   }
-
-//   .blog-card {
-//     flex-wrap: wrap;
-//   }
-// }
 
 @supports (display: grid) {
-  body {
-    // display: grid;
-    // grid-template-columns: repeat(4, 1fr);
-    // grid-gap: 0.625rem;
-    // grid-template-areas: ". main main ." ". main main .";
-  }
-
-  #container {
-    grid-area: main;
-    align-self: center;
-    justify-self: center;
-  }
-
   .tooltip-logo {
     height: 100%;
   }
@@ -403,12 +380,5 @@ $shadow: rgba(0, 0, 0, 0.2);
     grid-template-columns: 2fr 3fr;
     grid-template-rows: 1fr;
   }
-
-  //   @media (max-width: 40rem) {
-  //     .blog-card {
-  //       grid-template-columns: auto;
-  //       grid-template-rows: 12rem 1fr;
-  //     }
-  //   }
 }
 </style>
