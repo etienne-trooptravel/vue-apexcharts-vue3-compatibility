@@ -16,7 +16,7 @@
         </option>
       </select>
     </label>
-    <!-- <div>{{ contractors }}</div> -->
+
     <div class="chart">
       <GCharts type="Timeline" :data="series" :options="chartOptions" />
     </div>
@@ -31,14 +31,6 @@
 
     <tool-tip />
 
-    <!-- <div>{{ toolTipSeries1 }}</div>
-    <div class="chart">
-      <GCharts
-        type="Timeline"
-        :options="toolTipChartOptions"
-         @ready="onChartReady"
-      />
-    </div> -->
   </div>
 </template>
 
@@ -50,25 +42,6 @@ export default {
   name: "Policy",
   components: { GCharts, ToolTip },
   setup() {
-    // const chartsLib = ref(null)
-
-    // function onChartReady(chart, google) {
-    //   //   chartsLib.value = google;
-    // }
-
-    // const chartOptions = computed({
-    //   if (!chartsLib.value) return null
-    //   return chartsLib.value.charts.Bar.convertOptions({
-    //     chart: {
-    //       title: 'Company Performance',
-    //       subtitle: 'Sales, Expenses, and Profit: 2014-2017'
-    //     },
-    //     bars: 'horizontal', // Required for Material Bar Charts.
-    //     hAxis: { format: 'decimal' },
-    //     height: 400,
-    //     colors: ['#1b9e77', '#d95f02', '#7570b3']
-    //   })
-    // })
 
     const params = reactive({
       chartOptions: {
@@ -150,33 +123,6 @@ export default {
       get: () => contractors.value.length
     });
 
-    // const series = computed({
-    //   get: () => {
-    //     let arr = [];
-    //     arr[0] = ["name", "content", "start", "end"];
-
-    //     for (let i = 0; i < contractors.value.length; i++) {
-    //       let label = "";
-
-    //       if (selected.value === "none") {
-    //         label = "";
-    //       } else if (selected.value === "company") {
-    //         label = contractors.value[i].companyName;
-    //       } else if (selected.value === "role") {
-    //         label = contractors.value[i].role;
-    //       }
-
-    //       arr[i + 1] = [
-    //         contractors.value[i].name,
-    //         label,
-    //         contractors.value[i].start,
-    //         contractors.value[i].end
-    //       ];
-    //     }
-    //     return arr;
-    //   }
-    // });
-
     const series = computed({
       get: () => {
         let arr = [];
@@ -231,43 +177,14 @@ export default {
             label,
             contractors.value[i].name,
             chartTooltipHTML(i),
-            // `<div>Custom Tooltip: ${contractors.value[i].name}</div>`,
             bookingStyle(i),
             contractors.value[i].start,
             contractors.value[i].end
           ];
-          //   console.log(`${contractors.value[i].name}`, bookingStyle[i])
         }
         return arr;
       }
     });
-
-    // const toolTipSeries1 = computed({
-    //   get: () => {
-    //     let arr = [];
-
-    //     for (let i = 0; i < contractors.value.length; i++) {
-    //       let label = "";
-
-    //       if (selected.value === "none") {
-    //         label = "";
-    //       } else if (selected.value === "company") {
-    //         label = contractors.value[i].companyName;
-    //       } else if (selected.value === "role") {
-    //         label = contractors.value[i].role;
-    //       }
-
-    //       arr[i] = [
-    //         label,
-    //         contractors.value[i].name,
-    //         `<div>Custom Tooltip: ${contractors.value[i].name}</div>`,
-    //         contractors.value[i].start,
-    //         contractors.value[i].end
-    //       ];
-    //     }
-    //     return arr;
-    //   }
-    // });
 
     function bookingStyle(val) {
       let style = ["#71FFCD", "#FF6178"]; // Booking true/false
@@ -296,7 +213,7 @@ export default {
         '<article class="blog-card">' +
         '<img class="tooltip-logo" :src="' +
         contractors.value[i].companyLogo +
-        " />" +
+        '" />' +
         '<div class="tooltip-details">' +
         '<h4 class="tooltip-name">' +
         contractors.value[i].name +
@@ -328,70 +245,6 @@ export default {
       );
     }
 
-    // function onChartReady(chart, google) {
-    // //   console.log(`chart`, chart);
-    // //   console.log(`Google`, google);
-    //   let dataTable = new google.visualization.DataTable();
-    //   dataTable.addColumn({'type': 'string', 'id': 'name'});
-    //   dataTable.addColumn({'type': 'string', 'id': 'label'});
-    //         dataTable.addColumn({
-    //     'type': 'string',
-    //     'role': 'tooltip',
-    //     'p': { 'html': true }
-    //   });
-    //   dataTable.addColumn({'type': 'datetime', 'id': 'start'});
-    //   dataTable.addColumn({'type': 'datetime', 'id': 'end'});
-    // //   console.log(`TooltipSeries1`, toolTipSeries1);
-    //   dataTable.addRows(toolTipSeries1);
-    // //   dataTable.addRows(5);
-    // //   console.log(`chart`, chart);
-    // //   chart.push(chartTooltip());
-    // //     const query = new google.visualization.Query(
-    // //     "https://docs.google.com/spreadsheets/d/1qhyJnMpiuuwKLCY3t6W4bp6XKnixTFekAPlCpR8AcK0/edit?usp=sharing"
-    // //   )
-    // //   query.send(response => {
-    // //     const options = {
-    // //       title: "Creating a Chart from a Separate Spreadsheet"
-    // //     };
-    // //     const data = response.getDataTable();
-    // //     chart.draw(data, options);
-    // //   })
-    // }
-
-    // function chartTooltip() {
-    //   return (
-    //     '<div style="white-space: nowrap; padding:5px;"><b>' +
-    //     "</b><br>" +
-    //     "$" +
-    //     " B, <b>" +
-    //     "</b>: " +
-    //     "</div>"
-    //   );
-    // }
-
-    // function onChartReady(chart, google) {
-    //   console.log(`chart`, chart);
-    //   console.log(`Google`, google);
-    //   //   const query = new google.visualization.Query(
-    //   //     "https://url-to-spreadsheet..."
-    //   //   );
-    //   //   query.send(response => {
-    //   //     const options = {
-    //   //       // some custom options
-    //   //     };
-    //   //     const data = response.getDataTable();
-    //   //     chart.draw(data, options);
-    //   //   });
-    //   chartsLib.value = google;
-    // }
-
-    // const count = computed({
-    //   get: () => count.value + 1,
-    //   set: val => {
-    //     count.value = val - 1;
-    //   }
-    // });
-
     return {
       GCharts,
       ...toRefs(params),
@@ -401,8 +254,6 @@ export default {
       count,
       series,
       toolTipSeries,
-      //   toolTipSeries1,
-      //   series1,
       //   onChartReady,
       toolTipChartOptions,
       bookingStyle
@@ -531,10 +382,10 @@ $shadow: rgba(0, 0, 0, 0.2);
 
 @supports (display: grid) {
   body {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 0.625rem;
-    grid-template-areas: ". main main ." ". main main .";
+    // display: grid;
+    // grid-template-columns: repeat(4, 1fr);
+    // grid-gap: 0.625rem;
+    // grid-template-areas: ". main main ." ". main main .";
   }
 
   #container {
