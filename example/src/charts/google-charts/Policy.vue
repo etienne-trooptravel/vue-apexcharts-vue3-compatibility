@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div>Dataset size: {{ count }}</div>
-    <label for="sort_by"
+    <!-- <div>Dataset size: {{ count }}</div> -->
+    <label for="sort_by" class="sortBy"
       >Sort by:
       <select id="sort_by" class="select-sort-field" v-model="selected">
         <option
@@ -47,12 +47,12 @@ export default {
       height: 400,
       legend: { position: "bottom" },
       focusTarget: "category", // This line makes the entire category's tooltip active.
-      tooltip: { isHtml: true }, // Use an HTML tooltip.
-      explorer: {
-        axis: "horizontal",
-        keepInBounds: true,
-        maxZoomIn: 4.0
-      }
+      tooltip: { isHtml: true } // Use an HTML tooltip.
+      //   explorer: {
+      //     axis: "horizontal",
+      //     keepInBounds: true,
+      //     maxZoomIn: 4.0
+      //   }
     });
 
     const series = computed({
@@ -190,6 +190,12 @@ export default {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+
+.sortBy {
+    display: flex;
+    align-self: left;
+    margin-bottom: 20px;
 }
 
 $text: #777;
