@@ -24,18 +24,15 @@
       />
     </div>
 
-    <tool-tip />
-
   </div>
 </template>
 
 <script>
 import GCharts from "./GChart";
-import ToolTip from "./ToolTip";
-import { ref, reactive, computed, toRefs } from "vue";
+import { ref, computed } from "vue";
 export default {
   name: "Policy",
-  components: { GCharts, ToolTip },
+  components: { GCharts },
   setup() {
 
     const contractors = ref([
@@ -115,18 +112,8 @@ export default {
         ];
 
         for (let i = 0; i < contractors.value.length; i++) {
-          let label;
-
-          if (selected.value === "none") {
-            label = "Contractors";
-          } else if (selected.value === "company") {
-            label = contractors.value[i].companyName;
-          } else if (selected.value === "role") {
-            label = contractors.value[i].role;
-          }
-
           arr[i + 1] = [
-            label,
+            sortSelection(i),
             contractors.value[i].name,
             chartTooltipHTML(i),
             bookingStyle(i),
@@ -137,6 +124,18 @@ export default {
         return arr;
       }
     });
+
+    function sortSelection(val) {
+        let label;
+          if (selected.value === "none") {
+            label = "Contractors";
+          } else if (selected.value === "company") {
+            label = contractors.value[val].companyName;
+          } else if (selected.value === "role") {
+            label = contractors.value[val].role;
+          }
+          return label
+    }
 
     function bookingStyle(val) {
       let style = ["#71FFCD", "#FF6178"]; // Booking true/false
@@ -150,11 +149,15 @@ export default {
 
     const chartOptions = ref({
       title: "Data Line",
-    //   width: "50%",
       height: 400,
       legend: { position: "bottom" },
       focusTarget: "category", // This line makes the entire category's tooltip active.
-      tooltip: { isHtml: true } // Use an HTML tooltip.
+      tooltip: { isHtml: true }, // Use an HTML tooltip.
+      explorer: {
+        axis: 'horizontal',
+        keepInBounds: true,
+        maxZoomIn: 4.0
+      }
     });
 
     function chartTooltipHTML(i) {
@@ -224,6 +227,12 @@ export default {
   width: 100%;
 }
 
+.google-visualization-tooltip {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 $text: #777;
 $black: #121212;
 $white: #fff;
@@ -235,27 +244,19 @@ $shadow: rgba(0, 0, 0, 0.2);
   transition: $args;
 }
 
-* {
-  box-sizing: border-box;
-  &::before,
-  &::after {
-    box-sizing: border-box;
-  }
-}
-
 #container {
-  width: 18rem;
-//   box-shadow: 0 0.1875rem 1.5rem $shadow;
-//   border-radius: 0.375rem;
-//   height: 10rem;
+  display: flex;
+  background-color:$white;
+  box-shadow: 0 0.1875rem 1.5rem $shadow;
+  border-radius: 0.375rem;
+  
 }
 
 .blog-card {
+  width: 18rem;
   display: flex;
   flex-direction: row;
   background: $white;
-//   box-shadow: 0 0.1875rem 1.5rem $shadow;
-//   border-radius: 0.375rem;
   overflow: hidden;
 }
 
@@ -266,18 +267,10 @@ $shadow: rgba(0, 0, 0, 0.2);
   text-decoration: none;
   padding: 0;
   border: none;
-  &:hover .tooltip-name {
-    @include transition(color 0.3s ease);
-    color: $red;
-  }
-  &:hover .tooltip-logo {
-    @include transition(opacity 0.3s ease);
-    opacity: 0.9;
-  }
+  box-shadow: none !important;
 }
 
 .tooltip-logo {
-  @include transition(opacity 0.3s ease);
   display: block;
   width: 100%;
   object-fit: cover;
@@ -288,7 +281,6 @@ $shadow: rgba(0, 0, 0, 0.2);
 }
 
 .tooltip-name {
-  @include transition(color 0.3s ease);
   display: inline-block;
   text-transform: uppercase;
   font-size: 0.75rem;
