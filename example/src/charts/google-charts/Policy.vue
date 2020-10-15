@@ -2,8 +2,6 @@
 <template>
   <div>
     <div>Dataset size: {{ count }}</div>
-    <!-- <div>Dataset: {{ series }}</div> -->
-    <!-- <div>Chardata: {{ chartData }}</div> -->
     <label for="sort_by"
       >Sort by:
       <select id="sort_by" class="select-sort-field" v-model="selected">
@@ -17,15 +15,12 @@
       </select>
     </label>
 
-    <div class="chart">
-      <GCharts type="Timeline" :data="series" :options="chartOptions" />
-    </div>
-    <div class="hidden">{{ toolTipSeries }}</div>
+    <div class="hidden">{{ series }}</div>
     <div class="chart">
       <GCharts
         type="Timeline"
-        :data="toolTipSeries"
-        :options="toolTipChartOptions"
+        :data="series"
+        :options="chartOptions"
       />
     </div>
 
@@ -42,22 +37,6 @@ export default {
   name: "Policy",
   components: { GCharts, ToolTip },
   setup() {
-
-    const params = reactive({
-      chartOptions: {
-        title: "Data Line",
-        width: "100%",
-        height: 400,
-        legend: { position: "bottom" }
-      },
-      //   chartOptions,
-      chartData: [
-        ["name", "label", "start", "end"],
-        ["asdf", "notBlank1", new Date(1789, 3, 30), new Date(1797, 2, 4)],
-        ["asdf", "notBlank2", new Date(1789, 3, 30), new Date(1797, 2, 4)],
-        ["adf", "notBlank3", new Date(1789, 3, 30), new Date(1797, 2, 4)]
-      ]
-    });
 
     const contractors = ref([
       {
@@ -126,33 +105,6 @@ export default {
     const series = computed({
       get: () => {
         let arr = [];
-        arr[0] = ["name", "label", "start", "end"];
-
-        for (let i = 0; i < contractors.value.length; i++) {
-          let label = "";
-
-          if (selected.value === "none") {
-            label = "";
-          } else if (selected.value === "company") {
-            label = contractors.value[i].companyName;
-          } else if (selected.value === "role") {
-            label = contractors.value[i].role;
-          }
-
-          arr[i + 1] = [
-            label,
-            contractors.value[i].name,
-            contractors.value[i].start,
-            contractors.value[i].end
-          ];
-        }
-        return arr;
-      }
-    });
-
-    const toolTipSeries = computed({
-      get: () => {
-        let arr = [];
         arr[0] = [
           { type: "string", id: "label" },
           { type: "string", id: "name" },
@@ -163,10 +115,10 @@ export default {
         ];
 
         for (let i = 0; i < contractors.value.length; i++) {
-          let label = "";
+          let label;
 
           if (selected.value === "none") {
-            label = "";
+            label = "Contractors";
           } else if (selected.value === "company") {
             label = contractors.value[i].companyName;
           } else if (selected.value === "role") {
@@ -196,9 +148,9 @@ export default {
       }
     }
 
-    const toolTipChartOptions = ref({
+    const chartOptions = ref({
       title: "Data Line",
-      width: "100%",
+    //   width: "50%",
       height: 400,
       legend: { position: "bottom" },
       focusTarget: "category", // This line makes the entire category's tooltip active.
@@ -247,15 +199,12 @@ export default {
 
     return {
       GCharts,
-      ...toRefs(params),
       contractors,
       selected,
       items,
       count,
       series,
-      toolTipSeries,
-      //   onChartReady,
-      toolTipChartOptions,
+      chartOptions,
       bookingStyle
     };
   }
@@ -272,6 +221,7 @@ export default {
 }
 .chart {
   height: 400px;
+  width: 100%;
 }
 
 $text: #777;
