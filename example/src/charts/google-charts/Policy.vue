@@ -1,4 +1,3 @@
-/* eslint-disable vue/valid-template-root */
 <template>
   <div>
     <div>Dataset size: {{ count }}</div>
@@ -17,86 +16,33 @@
 
     <div class="hidden">{{ series }}</div>
     <div class="chart">
-      <GCharts
-        type="Timeline"
-        :data="series"
-        :options="chartOptions"
-      />
+      <GCharts type="Timeline" :data="series" :options="chartOptions" />
     </div>
-
   </div>
 </template>
 
 <script>
 import GCharts from "./GChart";
+import data from "./data";
 import { ref, computed } from "vue";
+import contractors from "./data";
 export default {
   name: "Policy",
   components: { GCharts },
-  setup() {
-
-    const contractors = ref([
-      {
-        companyName: "Trooptravel",
-        companyLogo:
-          "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/xgxvcsotbsyxqqd0v3wk",
-        role: "Founder",
-        name: "Leonard",
-        booking: true,
-        start: new Date(new Date().setDate(new Date().getDate())),
-        end: new Date(new Date().setDate(new Date().getDate() + 3))
-      },
-      {
-        companyName: "Tesla",
-        companyLogo:
-          "https://www.logo.wine/a/logo/Tesla%2C_Inc./Tesla%2C_Inc.-Logo.wine.svg",
-        role: "Senior Developer",
-        name: "Ignatius",
-        booking: false,
-        start: new Date(new Date().setDate(new Date().getDate() + 1)),
-        end: new Date(new Date().setDate(new Date().getDate() + 3))
-      },
-      {
-        companyName: "Trooptravel",
-        companyLogo:
-          "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/xgxvcsotbsyxqqd0v3wk",
-        role: "Founder",
-        name: "Dennis",
-        booking: true,
-        start: new Date(new Date().setDate(new Date().getDate() + 1)),
-        end: new Date(new Date().setDate(new Date().getDate() + 3))
-      },
-      {
-        companyName: "Landobyte",
-        companyLogo:
-          "https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/pd3irshwgvjuxqu9y0i9",
-        role: "Lead Developer",
-        name: "Rhyno",
-        booking: true,
-        start: new Date(new Date().setDate(new Date().getDate() + 4)),
-        end: new Date(new Date().setDate(new Date().getDate() + 6))
-      },
-      {
-        companyName: "Trooptravel",
-        companyLogo:
-          "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/xgxvcsotbsyxqqd0v3wk",
-        role: "Junior Developer",
-        name: "Etienne",
-        booking: false,
-        start: new Date(new Date().setDate(new Date().getDate() + 2)),
-        end: new Date(new Date().setDate(new Date().getDate() + 3))
-      }
-    ]);
-
-    const selected = ref("none");
+  props: {
+    seriesdata: () => {
+      return contractors;
+    }
+  },
+  setup(props) {
+    const selected = ref("company");
     const items = ref([
-      { id: 1, val: "none" },
-      { id: 2, val: "company" },
-      { id: 3, val: "role" }
+      { id: 1, val: "company" },
+      { id: 2, val: "role" }
     ]);
 
     const count = computed({
-      get: () => contractors.value.length
+      get: () => contractors.length
     });
 
     const series = computed({
@@ -111,14 +57,14 @@ export default {
           { type: "datetime", id: "end" }
         ];
 
-        for (let i = 0; i < contractors.value.length; i++) {
+        for (let i = 0; i < contractors.length; i++) {
           arr[i + 1] = [
             sortSelection(i),
-            contractors.value[i].name,
+            contractors[i].name,
             chartTooltipHTML(i),
             bookingStyle(i),
-            contractors.value[i].start,
-            contractors.value[i].end
+            contractors[i].start,
+            contractors[i].end
           ];
         }
         return arr;
@@ -126,21 +72,20 @@ export default {
     });
 
     function sortSelection(val) {
-        let label;
-          if (selected.value === "none") {
-            label = "Contractors";
-          } else if (selected.value === "company") {
-            label = contractors.value[val].companyName;
-          } else if (selected.value === "role") {
-            label = contractors.value[val].role;
-          }
-          return label
+      let label;
+
+      if (selected.value === "company") {
+        label = contractors[val].companyName;
+      } else if (selected.value === "role") {
+        label = contractors[val].role;
+      }
+      return label;
     }
 
     function bookingStyle(i) {
       let style = ["#71FFCD", "#FF6178"]; // Booking true/false
 
-      if (contractors.value[i].booking) {
+      if (contractors[i].booking) {
         return style[0];
       } else {
         return style[1];
@@ -154,24 +99,37 @@ export default {
       focusTarget: "category", // This line makes the entire category's tooltip active.
       tooltip: { isHtml: true }, // Use an HTML tooltip.
       explorer: {
-        axis: 'horizontal',
+        axis: "horizontal",
         keepInBounds: true,
         maxZoomIn: 4.0
       }
-    })
+    });
 
     function getFormattedDate(i) {
-        let start = contractors.value[i].start.toLocaleString("default", {month: "short"}) + " " + contractors.value[i].start.getDate();
-        let end = contractors.value[i].end.toLocaleString("default", {month: "short"}) + " " + contractors.value[i].end.getDate();
-        if (contractors.value[i].start.getFullYear() != contractors.value[i].end.getFullYear()) {
-            start = start + " " + contractors.value[i].start.getFullYear();
-            end = end + " " + contractors.value[i].end.getFullYear();
-        } else if (contractors.value[i].start.getMonth() != contractors.value[i].end.getMonth()) {
-            end = end + ", " + contractors.value[i].end.getFullYear();
-        } else {
-            end =  contractors.value[i].end.getDate() + ", " + contractors.value[i].start.getFullYear();
-        }
-        return start + " - " + end
+      let start =
+        contractors[i].start.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].start.getDate();
+      let end =
+        contractors[i].end.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].end.getDate();
+      if (
+        contractors[i].start.getFullYear() != contractors[i].end.getFullYear()
+      ) {
+        start = start + " " + contractors[i].start.getFullYear();
+        end = end + " " + contractors[i].end.getFullYear();
+      } else if (
+        contractors[i].start.getMonth() != contractors[i].end.getMonth()
+      ) {
+        end = end + ", " + contractors[i].end.getFullYear();
+      } else {
+        end =
+          contractors[i].end.getDate() +
+          ", " +
+          contractors[i].start.getFullYear();
+      }
+      return start + " - " + end;
     }
 
     function chartTooltipHTML(i) {
@@ -181,22 +139,21 @@ export default {
         '<a class="card-link" href="#">' +
         '<article class="blog-card">' +
         '<img class="tooltip-logo" src="' +
-        contractors.value[i].companyLogo +
+        contractors[i].companyLogo +
         '" />' +
         '<div class="tooltip-details">' +
         '<h4 class="tooltip-name">' +
-        contractors.value[i].name +
+        contractors[i].name +
         "</h4>" +
         '<h3 class="tooltip-date">' +
         getFormattedDate(i) +
         "</h3>" +
         '<p class="tooltip-duration"> Duration: ' +
-        (contractors.value[i].end - contractors.value[i].start) /
-          (1000 * 3600 * 24) +
+        (contractors[i].end - contractors[i].start) / (1000 * 3600 * 24) +
         " days" +
         "</p>" +
         '<p class="tooltip-role">' +
-        contractors.value[i].role +
+        contractors[i].role +
         "</p>" +
         "</div>" +
         "</article>" +
@@ -208,7 +165,6 @@ export default {
 
     return {
       GCharts,
-      contractors,
       selected,
       items,
       count,
@@ -234,9 +190,9 @@ export default {
 }
 
 .google-visualization-tooltip {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 $text: #777;
@@ -252,10 +208,9 @@ $shadow: rgba(0, 0, 0, 0.2);
 
 #container {
   display: flex;
-  background-color:$white;
+  background-color: $white;
   box-shadow: 0 0.1875rem 1.5rem $shadow;
   border-radius: 0.375rem;
-  
 }
 
 .blog-card {
@@ -318,7 +273,6 @@ $shadow: rgba(0, 0, 0, 0.2);
   padding: 0.5rem 0 0 0;
   border-top: 0.0625rem solid $border;
 }
-
 
 @supports (display: grid) {
   .tooltip-logo {
