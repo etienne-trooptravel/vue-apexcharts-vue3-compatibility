@@ -251,6 +251,7 @@ $shadow: rgba(0, 0, 0, 0.2);
 }
 
 .tooltip-duration {
+  font-size: 1rem;
   margin: 0;
 }
 
