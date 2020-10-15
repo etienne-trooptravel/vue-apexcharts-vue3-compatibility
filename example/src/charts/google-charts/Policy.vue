@@ -36,6 +36,7 @@ export default {
   },
   setup(props) {
     const selected = ref("company");
+
     const items = ref([
       { id: 1, val: "company" },
       { id: 2, val: "role" }
@@ -43,6 +44,19 @@ export default {
 
     const count = computed({
       get: () => contractors.length
+    });
+
+    const chartOptions = ref({
+      title: "Data Line",
+      height: 400,
+      legend: { position: "bottom" },
+      focusTarget: "category", // This line makes the entire category's tooltip active.
+      tooltip: { isHtml: true }, // Use an HTML tooltip.
+      explorer: {
+        axis: "horizontal",
+        keepInBounds: true,
+        maxZoomIn: 4.0
+      }
     });
 
     const series = computed({
@@ -82,56 +96,6 @@ export default {
       return label;
     }
 
-    function bookingStyle(i) {
-      let style = ["#71FFCD", "#FF6178"]; // Booking true/false
-
-      if (contractors[i].booking) {
-        return style[0];
-      } else {
-        return style[1];
-      }
-    }
-
-    const chartOptions = ref({
-      title: "Data Line",
-      height: 400,
-      legend: { position: "bottom" },
-      focusTarget: "category", // This line makes the entire category's tooltip active.
-      tooltip: { isHtml: true }, // Use an HTML tooltip.
-      explorer: {
-        axis: "horizontal",
-        keepInBounds: true,
-        maxZoomIn: 4.0
-      }
-    });
-
-    function getFormattedDate(i) {
-      let start =
-        contractors[i].start.toLocaleString("default", { month: "short" }) +
-        " " +
-        contractors[i].start.getDate();
-      let end =
-        contractors[i].end.toLocaleString("default", { month: "short" }) +
-        " " +
-        contractors[i].end.getDate();
-      if (
-        contractors[i].start.getFullYear() != contractors[i].end.getFullYear()
-      ) {
-        start = start + " " + contractors[i].start.getFullYear();
-        end = end + " " + contractors[i].end.getFullYear();
-      } else if (
-        contractors[i].start.getMonth() != contractors[i].end.getMonth()
-      ) {
-        end = end + ", " + contractors[i].end.getFullYear();
-      } else {
-        end =
-          contractors[i].end.getDate() +
-          ", " +
-          contractors[i].start.getFullYear();
-      }
-      return start + " - " + end;
-    }
-
     function chartTooltipHTML(i) {
       return (
         '<div id="container">' +
@@ -161,6 +125,43 @@ export default {
         "</div>" +
         "</div>"
       );
+    }
+
+    function getFormattedDate(i) {
+      let start =
+        contractors[i].start.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].start.getDate();
+      let end =
+        contractors[i].end.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].end.getDate();
+      if (
+        contractors[i].start.getFullYear() != contractors[i].end.getFullYear()
+      ) {
+        start = start + " " + contractors[i].start.getFullYear();
+        end = end + " " + contractors[i].end.getFullYear();
+      } else if (
+        contractors[i].start.getMonth() != contractors[i].end.getMonth()
+      ) {
+        end = end + ", " + contractors[i].end.getFullYear();
+      } else {
+        end =
+          contractors[i].end.getDate() +
+          ", " +
+          contractors[i].start.getFullYear();
+      }
+      return start + " - " + end;
+    }
+
+    function bookingStyle(i) {
+      let style = ["#71FFCD", "#FF6178"]; // Booking true/false
+
+      if (contractors[i].booking) {
+        return style[0];
+      } else {
+        return style[1];
+      }
     }
 
     return {
