@@ -23,18 +23,14 @@
 
 <script>
 import GCharts from "./GChart";
-import data from "./data";
 import { ref, computed } from "vue";
 import contractors from "./data";
+
 export default {
   name: "Policy",
   components: { GCharts },
-  props: {
-    seriesdata: () => {
-      return contractors;
-    }
-  },
-  setup(props) {
+
+  setup() {
     const selected = ref("company");
 
     const items = ref([
