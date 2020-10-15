@@ -3,12 +3,12 @@
     <div id="blog-card">
       <a class="card-link" href="#">
         <article class="blog-card">
-          <img class="post-image" :src="image" />
-          <div class="article-details">
-            <h4 class="post-category">{{ category }}</h4>
-            <h3 class="post-title">{{ name }}</h3>
-            <p class="post-description">{{ desc }}</p>
-            <p class="post-author">{{ author }}</p>
+          <img class="tooltip-logo" :src="image" />
+          <div class="tooltip-details">
+            <h4 class="tooltip-name">{{ name }}</h4>
+            <h3 class="tooltip-date">{{ date }}</h3>
+            <p class="tooltip-duration">{{ duration }}</p>
+            <p class="tooltip-profession">{{ role }}</p>
           </div>
         </article>
       </a>
@@ -22,12 +22,12 @@ export default {
   // https://res-3.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/pd3irshwgvjuxqu9y0i9
 
   data: () => ({
-    name: "Oct 15 - 17, 2020",
-    category: "Ignatius", // "Travel"
+    date: "Oct 15 - 17, 2020",
+    name: "Ignatius", // "Travel"
     image:
       "https://www.logo.wine/a/logo/Tesla%2C_Inc./Tesla%2C_Inc.-Logo.wine.svg",
-    author: "Senior Developer",
-    desc: `Duration: 2 days`
+    role: "Senior Developer",
+    duration: `Duration: 2 days`
   })
 };
 </script>
@@ -73,28 +73,29 @@ $shadow: rgba(0, 0, 0, 0.2);
   text-decoration: none;
   padding: 0;
   border: none;
-  &:hover .post-title {
+  &:hover .tooltip-name {
     @include transition(color 0.3s ease);
     color: $red;
   }
-  &:hover .post-image {
+  &:hover .tooltip-logo {
     @include transition(opacity 0.3s ease);
     opacity: 0.9;
   }
 }
 
-.post-image {
+.tooltip-logo {
   @include transition(opacity 0.3s ease);
   display: block;
   width: 100%;
   object-fit: cover;
 }
 
-.article-details {
+.tooltip-details {
   padding: 0.5rem;
 }
 
-.post-category {
+.tooltip-name {
+  @include transition(color 0.3s ease);
   display: inline-block;
   text-transform: uppercase;
   font-size: 0.75rem;
@@ -106,11 +107,11 @@ $shadow: rgba(0, 0, 0, 0.2);
   border-bottom: 0.125rem solid $border;
 }
 
-.post-description {
+.tooltip-duration {
   margin: 0;
 }
 
-.post-title {
+.tooltip-date {
   @include transition(color 0.3s ease);
   font-size: 1rem;
   line-height: 1.4;
@@ -119,7 +120,7 @@ $shadow: rgba(0, 0, 0, 0.2);
   margin: 0 0 0 0;
 }
 
-.post-author {
+.tooltip-profession {
   font-size: 0.875rem;
   line-height: 1;
   margin: 0.5rem 0 0 0;
@@ -127,16 +128,16 @@ $shadow: rgba(0, 0, 0, 0.2);
   border-top: 0.0625rem solid $border;
 }
 
-@media (max-width: 40rem) {
-  #container {
-    width: 9rem;
-    height: 14rem;
-  }
+// @media (max-width: 40rem) {
+//   #container {
+//     width: 10rem;
+//     height: 12rem;
+//   }
 
-  .blog-card {
-    flex-wrap: wrap;
-  }
-}
+//   .blog-card {
+//     flex-wrap: wrap;
+//   }
+// }
 
 @supports (display: grid) {
   body {
@@ -152,7 +153,7 @@ $shadow: rgba(0, 0, 0, 0.2);
     justify-self: center;
   }
 
-  .post-image {
+  .tooltip-logo {
     height: 100%;
   }
 
@@ -162,11 +163,11 @@ $shadow: rgba(0, 0, 0, 0.2);
     grid-template-rows: 1fr;
   }
 
-  @media (max-width: 40rem) {
-    .blog-card {
-      grid-template-columns: auto;
-      grid-template-rows: 12rem 1fr;
-    }
-  }
+  //   @media (max-width: 40rem) {
+  //     .blog-card {
+  //       grid-template-columns: auto;
+  //       grid-template-rows: 12rem 1fr;
+  //     }
+  //   }
 }
 </style>
