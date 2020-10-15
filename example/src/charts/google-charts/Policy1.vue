@@ -1,0 +1,342 @@
+<template>
+  <div>
+    <div>Dataset size: {{ count }}</div>
+    <label for="sort_by"
+      >Sort by:
+      <select id="sort_by" class="select-sort-field" v-model="selected">
+        <option
+          v-for="item in items"
+          :value="item.val"
+          :key="item.id"
+          class="select-sort-field"
+          >{{ item.val }}
+        </option>
+      </select>
+    </label>
+
+    <div class="hidden">{{ series }}</div>
+    <div class="">{{ chartOptions }}</div>
+    <div class="chart">
+      <!-- :settings="{ packages: ['timeline'] }" -->
+      <GCharts
+        type="Timeline"
+        :settings="{ packages: ['timeline'] }"
+        :data="series"
+        :options="chartOptions"
+        :events="chartEvents"
+        @ready="onChartReady"
+      />
+    </div>
+    <!-- :createChart="(el, google) => new google.charts.Timeline(el)"
+        @ready="onChartReady" -->
+  </div>
+</template>
+
+<script>
+import GCharts from "./GChart";
+import { ref, computed } from "vue";
+import contractors from "./data";
+
+export default {
+  name: "Policy1",
+  components: { GCharts },
+
+  setup() {
+    const selected = ref("company");
+    const chartsLib = ref(null);
+
+    const items = ref([
+      { id: 1, val: "company" },
+      { id: 2, val: "role" }
+    ]);
+
+    const count = computed({
+      get: () => contractors.length
+    });
+
+    const chartOptions = computed({
+      get: () => {
+        // if (!chartsLib.value) {
+        //   return null;
+        //   console.log(`chartslib = null`);
+        // } else {
+        // return chartsLib.value.charts.Timeline.convertOptions({
+        return {
+          title: "Data Line",
+          height: 400,
+          legend: { position: "bottom" },
+          focusTarget: "category", // This line makes the entire category's tooltip active.
+          tooltip: { isHtml: true, trigger: "selection" } // Use an HTML tooltip.  isHtml: true, trigger: "selection"
+        };
+        // });
+        // console.log(`chartslib`, chartsLib.value);
+        // }
+        //   console.log(`chartOptions`);
+      }
+    });
+
+    const series = computed({
+      get: () => {
+        let arr = [];
+        arr[0] = [
+          { type: "string", id: "label" },
+          { type: "string", id: "name" },
+          { type: "string", role: "tooltip" },
+          { type: "string", id: "style", role: "style" },
+          { type: "datetime", id: "start" },
+          { type: "datetime", id: "end" }
+        ];
+
+        for (let i = 0; i < contractors.length; i++) {
+          arr[i + 1] = [
+            sortSelectionBy(i),
+            contractors[i].name,
+            chartTooltipHTML(i),
+            bookingStyle(i),
+            contractors[i].start,
+            contractors[i].end
+          ];
+        }
+        return arr;
+      }
+    });
+
+    function sortSelectionBy(val) {
+      let label;
+
+      if (selected.value === "company") {
+        label = contractors[val].companyName;
+      } else if (selected.value === "role") {
+        label = contractors[val].role;
+      }
+      return label;
+    }
+
+    function chartTooltipHTML(i) {
+      return (
+        '<div id="container">' +
+        '<div id="blog-card">' +
+        '<a class="card-link" href="#">' +
+        '<article class="blog-card">' +
+        '<img class="tooltip-logo" src="' +
+        contractors[i].companyLogo +
+        '" />' +
+        '<div class="tooltip-details">' +
+        '<h4 class="tooltip-name">' +
+        contractors[i].name +
+        "</h4>" +
+        '<h3 class="tooltip-date">' +
+        getFormattedDate(i) +
+        "</h3>" +
+        '<p class="tooltip-duration"> Duration: ' +
+        (contractors[i].end - contractors[i].start) / (1000 * 3600 * 24) +
+        " days" +
+        "</p>" +
+        //
+        "<button>Hello</button>" +
+        //
+        // '<p class="tooltip-role">' +
+        // contractors[i].role +
+        // "</p>" +
+        "</div>" +
+        "</article>" +
+        "</a>" +
+        "</div>" +
+        "</div>"
+      );
+    }
+
+    function getFormattedDate(i) {
+      let start =
+        contractors[i].start.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].start.getDate();
+      let end =
+        contractors[i].end.toLocaleString("default", { month: "short" }) +
+        " " +
+        contractors[i].end.getDate();
+      if (
+        contractors[i].start.getFullYear() != contractors[i].end.getFullYear()
+      ) {
+        start = start + " " + contractors[i].start.getFullYear();
+        end = end + " " + contractors[i].end.getFullYear();
+      } else if (
+        contractors[i].start.getMonth() != contractors[i].end.getMonth()
+      ) {
+        end = end + ", " + contractors[i].end.getFullYear();
+      } else {
+        end =
+          contractors[i].end.getDate() +
+          ", " +
+          contractors[i].start.getFullYear();
+      }
+      return start + " - " + end;
+    }
+
+    function bookingStyle(i) {
+      let style = ["#71FFCD", "#FF6178"]; // Booking true/false
+
+      if (contractors[i].booking) {
+        return style[0];
+      } else {
+        return style[1];
+      }
+    }
+
+    function onChartReady(chart, google) {
+      chartsLib.value = google;
+    //   console.log(`onChartReady`, chartsLib.value.visualization.Timeline.drawChart);
+        console.log(`onChartReady`, chartsLib.value.visualization);
+
+        chartsLib.value.visualization.events.addListener(chart, 'onmouseover', function(e){
+            chart.setSelection([{row: e.row, column: e.column}])
+            onChartSelection(e)
+        })
+    }
+
+    function onChartSelection(e) {
+        console.log(`onChartSelection`, e)
+    }
+
+    //     google.visualization.events.addListener(chart, 'onmouseover', function(e){
+    //   chart.setSelection([{row: e.row, column: e.column}]);
+    //   onChartSelection(e);
+//   });
+    //   console.log(`onChartReady`, chartsLib.value.visualization.events);
+    // console.log(`onChartReady`, chartsLib.value);
+    // }
+
+    const chartEvents = {
+      'select': () => {
+        console.log(`Click`);
+      }
+    };
+
+    return {
+      GCharts,
+      selected,
+      items,
+      count,
+      series,
+      chartOptions,
+      bookingStyle,
+      onChartReady,
+      chartEvents
+      //   initTooltip,
+      //   mouseOverHandler
+    };
+  }
+};
+</script>
+
+<style lang="scss">
+.select-sort-field {
+  text-transform: capitalize;
+}
+
+.hidden {
+  display: none;
+}
+.chart {
+  height: 400px;
+  width: 100%;
+}
+
+.google-visualization-tooltip {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+$text: #777;
+$black: #121212;
+$white: #fff;
+$red: #e04f62;
+$border: #ebebeb;
+$shadow: rgba(0, 0, 0, 0.2);
+
+@mixin transition($args...) {
+  transition: $args;
+}
+
+#container {
+  display: flex;
+  background-color: $white;
+  box-shadow: 0 0.1875rem 1.5rem $shadow;
+  border-radius: 0.375rem;
+}
+
+.blog-card {
+  width: 18rem;
+  display: flex;
+  flex-direction: row;
+  background: $white;
+  overflow: hidden;
+}
+
+.card-link {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 0;
+  border: none;
+  box-shadow: none !important;
+}
+
+.tooltip-logo {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.tooltip-details {
+  padding: 0.5rem;
+}
+
+.tooltip-name {
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.0625rem;
+  margin: 0 0 0.5rem 0;
+  padding: 0 0 0.5rem 0;
+  border-bottom: 0.125rem solid $border;
+}
+
+.tooltip-duration {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.tooltip-date {
+  @include transition(color 0.3s ease);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: $black;
+  font-weight: 400;
+  margin: 0 0 0 0;
+}
+
+.tooltip-role {
+  font-size: 0.875rem;
+  line-height: 1;
+  margin: 0.5rem 0 0 0;
+  padding: 0.5rem 0 0 0;
+  border-top: 0.0625rem solid $border;
+}
+
+@supports (display: grid) {
+  .tooltip-logo {
+    height: 100%;
+  }
+
+  .blog-card {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 1fr;
+  }
+}
+</style>
