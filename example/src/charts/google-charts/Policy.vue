@@ -103,7 +103,7 @@ export default {
       {
         companyName: "Trooptravel",
         companyLogo:
-          "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/xgxvcsotbsyxqqd0v3wk",
+          "https://www.logo.wine/a/logo/Tesla%2C_Inc./Tesla%2C_Inc.-Logo.wine.svg",
         role: "Junior Developer",
         name: "Etienne",
         booking: false,
@@ -211,7 +211,7 @@ export default {
         '<div id="blog-card">' +
         '<a class="card-link" href="#">' +
         '<article class="blog-card">' +
-        '<img class="tooltip-logo" :src="' +
+        '<img class="tooltip-logo" src="' +
         contractors.value[i].companyLogo +
         '" />' +
         '<div class="tooltip-details">' +
@@ -295,15 +295,17 @@ $shadow: rgba(0, 0, 0, 0.2);
 
 #container {
   width: 18rem;
-  height: 10rem;
+//   box-shadow: 0 0.1875rem 1.5rem $shadow;
+//   border-radius: 0.375rem;
+//   height: 10rem;
 }
 
 .blog-card {
   display: flex;
   flex-direction: row;
   background: $white;
-  box-shadow: 0 0.1875rem 1.5rem $shadow;
-  border-radius: 0.375rem;
+//   box-shadow: 0 0.1875rem 1.5rem $shadow;
+//   border-radius: 0.375rem;
   overflow: hidden;
 }
 
