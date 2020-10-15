@@ -103,7 +103,7 @@ export default {
       {
         companyName: "Trooptravel",
         companyLogo:
-          "https://www.logo.wine/a/logo/Tesla%2C_Inc./Tesla%2C_Inc.-Logo.wine.svg",
+          "https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/xgxvcsotbsyxqqd0v3wk",
         role: "Junior Developer",
         name: "Etienne",
         booking: false,
