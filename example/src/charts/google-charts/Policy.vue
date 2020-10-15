@@ -411,7 +411,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .select-sort-field {
   text-transform: capitalize;
 }
