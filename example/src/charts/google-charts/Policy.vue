@@ -137,10 +137,10 @@ export default {
           return label
     }
 
-    function bookingStyle(val) {
+    function bookingStyle(i) {
       let style = ["#71FFCD", "#FF6178"]; // Booking true/false
 
-      if (contractors.value[val].booking) {
+      if (contractors.value[i].booking) {
         return style[0];
       } else {
         return style[1];
@@ -158,7 +158,21 @@ export default {
         keepInBounds: true,
         maxZoomIn: 4.0
       }
-    });
+    })
+
+    function getFormattedDate(i) {
+        let start = contractors.value[i].start.toLocaleString("default", {month: "short"}) + " " + contractors.value[i].start.getDate();
+        let end = contractors.value[i].end.toLocaleString("default", {month: "short"}) + " " + contractors.value[i].end.getDate();
+        if (contractors.value[i].start.getFullYear() != contractors.value[i].end.getFullYear()) {
+            start = start + " " + contractors.value[i].start.getFullYear();
+            end = end + " " + contractors.value[i].end.getFullYear();
+        } else if (contractors.value[i].start.getMonth() != contractors.value[i].end.getMonth()) {
+            end = end + ", " + contractors.value[i].end.getFullYear();
+        } else {
+            end =  contractors.value[i].end.getDate() + ", " + contractors.value[i].start.getFullYear();
+        }
+        return start + " - " + end
+    }
 
     function chartTooltipHTML(i) {
       return (
@@ -174,15 +188,7 @@ export default {
         contractors.value[i].name +
         "</h4>" +
         '<h3 class="tooltip-date">' +
-        contractors.value[i].start.toLocaleString("default", {
-          month: "short"
-        }) +
-        " " +
-        contractors.value[i].start.getDate() +
-        " - " +
-        contractors.value[i].end.getDate() +
-        ", " +
-        contractors.value[i].start.getFullYear() +
+        getFormattedDate(i) +
         "</h3>" +
         '<p class="tooltip-duration"> Duration: ' +
         (contractors.value[i].end - contractors.value[i].start) /
